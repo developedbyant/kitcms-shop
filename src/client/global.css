@@ -1,0 +1,89 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
+/* @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Poppins:wght@200;300;400;500;600;700;800&display=swap'); */
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    /* font-family: 'Nanum Gothic', sans-serif; */
+
+}
+
+.client{
+    --maxWidth:1200px;
+    --shadow:rgba(0,0,0,5%);
+    /* backgrounds */
+    --appBg:#f2f2f2;
+    --antiAppBg:#F9FAFB;
+    --blurBg: #ffffffd1;
+    --errorBg: #cc7d7d;
+    --successBg: var(--mainColor);
+    --searchBg:#f9fafb;
+    --navBg:#ffffff;
+    --navLinkHoverBg:#f2f2f2; 
+    --cardBg:#ebebeb7d;
+    --dataLabelBg:#383838;
+    --buttonBg: #FA6743;
+    --secondButtonBg: #FA6743;
+    /* colors */
+    --headerColor:#5a5a5a;
+    --textColor:#6B7280;
+    --borderColor:#d3d3d3;
+    --iconColor: #0000008c;
+    --mainColor:#FA6743;
+    --secondColor:#FA6743;
+    --errorColor: #fff;
+    --searchColor:#b3b3b3;
+    --navLinkColor:#707070;
+    --navLinkHoverColor:#737373;
+    --secondNavLinkColor:#737373;
+    --secondNavLinkHoverColor:#737373;
+    --cardColor:#828282;
+    --dataLabelColor:#cfcfcf;
+    --buttonColor:#fff;
+    --secondButtonColor:#fff;
+    --blurColor:#6d6d6d;
+    --successColor: #fff;
+}
+
+/* label data */
+[data-label]{
+    position: relative;
+}
+[data-label]:hover::before{
+    content: attr(data-label);
+    width: max-content;
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 10;
+    background-color: var(--dataLabelBg);
+    color: var(--dataLabelColor);
+    font-size: 12px;
+    font-weight: 400;
+    border-radius: 5px;
+    padding: 7px 13px;
+    top: calc(100% + 10px);
+    left: 50%; transform: translateX(-50%);
+}
+[data-label-tr]:hover::before,[data-label-tl]:hover::before,[data-label-br]:hover::before,[data-label-bl]:hover::before{
+    transform: none;
+}
+[data-label-tr]:hover::before{
+    top: calc(-100% - 15px);
+    left: calc(100% + 5px);
+}
+[data-label-tl]:hover::before{
+    top: calc(-100% - 15px);
+    right: calc(100% + 5px);
+    left: auto;
+}
+[data-label-bl]:hover::before{
+    top: calc(100% + 5px);
+    right: calc(100% + 5px);
+    left: auto;
+}
+[data-label-br]:hover::before{
+    top: calc(100% + 5px);
+    right: auto;
+    left: calc(100% + 5px);
+}
