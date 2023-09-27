@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { appStore } from "client/lib/stores";
+    import { appStore,cartStore } from "client/lib/stores";
     import logoSrc from "client/images/logo.png"
     import BurgerMenu from "./Burger.svelte";
     import BagIcon from "client/icons/Bag.svelte"
@@ -29,7 +29,7 @@
             </ul>
             <button class="cartBtn" on:click={openCart}>
                 <BagIcon size=15 />
-                <div class="count">{0}</div>
+                <div class="count">{$cartStore ? $cartStore.totalItems : 0}</div>
             </button>
         </div>
     </nav>

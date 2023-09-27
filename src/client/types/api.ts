@@ -1,14 +1,16 @@
 import type { CartsData } from "svelteCMS/types"
 
 // API ENDPOINTS =============================================================
-type ApiUsersEndpoints<Start extends string = "/api/cart"> = `${Start}/update` | `${Start}/delete` | `${Start}/add-item`
+type ApiUsersEndpoints<Start extends string = "/api/cart"> = `${Start}/update` | `${Start}/delete` | `${Start}/item-update`
 /** All api endpoints */
 export type ApiEndpoints = ApiUsersEndpoints
 
 
 // API INPUTS AND OUTPUTS =============================================================
 /** update cart */
-export type ApiCartUpdate = ApiRequest<CartsData['items'][0],Omit<CartsData,"createdAt">>
+export type ApiCartUpdate = ApiRequest<CartsData['items'][0],CartsData>
+/** update cart item */
+export type ApiCartItemUpdate = ApiRequest<CartsData['items'][0],CartsData|null>
 
 
 // CORE =============================================================

@@ -24,19 +24,19 @@
     .burgerChild{
         width: 100%;
         height: 7px;
-        background-color: var(--antiAppBg);
+        background-color: var(--borderColor);
         border: 1px solid var(--borderColor);
-        border-radius: 5px;
+        border-radius: 2px;
         transition: all ease-in-out 0.2s;
     }
     .burgerChild::after,.burgerChild::before{
         content: "";
         position: absolute;
         left: 0;
-        border-radius: 20px;
+        border-radius: 2px;
         width: 97%;
         height: 4px;
-        background-color: var(--antiAppBg);
+        background-color: var(--borderColor);
         border: 1px solid var(--borderColor);
         transition: transform ease-in-out 0.3s;
     }

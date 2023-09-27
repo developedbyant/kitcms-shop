@@ -1,15 +1,18 @@
 <script lang="ts">
-    export let item:GeneratedTypes.CartsData['items'][0]
+    export let item:CartsData['items'][0]
+    export let updatingItem:CartsData['items'][0]
     import { createEventDispatcher } from "svelte";
-    import type * as GeneratedTypes from "svelteCMS/types/generated"
+    import type { CartsData } from "svelteCMS/types/generated"
     const dispatch = createEventDispatcher()
-    let quantity:number = item.quantity
+    $: loading = updatingItem.productID === item.productID && updatingItem.variant=== item.variant
     
     /** handle quantity change */
-    async function changeQuantify(action:"add"|"remove"|undefined){
-        quantity = action==="add" ? quantity + 1 : quantity - 1
+    async function changeQuantify(action:"add"|"remove"){
+        item.quantity = action==="add" ? item.quantity + 1 : item.quantity - 1
         // if quantity is 0 or less, remove item from cart
-        if(quantity<=0) dispatch("remove",item)
+        if(item.quantity<=0) dispatch("remove",item)
+        // send change event when quantity change
+        dispatch("update",item)
     }
 </script>
 
@@ -22,9 +25,9 @@
         <span class="variant">{item.variant}</span>
         <span class="price">{item.price}</span>
     </div>
-    <div class="actions">
+    <div class="actions" class:loading>
         <button class="remove" data-label-left data-label="Remove" on:click={()=>changeQuantify("remove")}>-</button>
-        <input type="number" class="count" bind:value={quantity}>
+        <input type="number" class="count" bind:value={item.quantity} on:change={()=>dispatch("update",item)}>
         <button class="add" data-label-left data-label="Add" on:click={()=>changeQuantify("add")}>+</button>
     </div>
 </div>
@@ -88,6 +91,12 @@
         padding: 3px;
         border-radius: 40px;
         box-shadow: 1px 2px 3px rgba(0,0,0,5%);
+        position: relative;
+        &.loading{
+            animation: loading 0.6s linear infinite alternate;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
     }
     .remove,.add{
         cursor: pointer;
@@ -127,5 +136,9 @@
     .count::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
+    }
+    @keyframes loading {
+        from { box-shadow: 0 0 2px 2px var(--mainColor); }
+        to { box-shadow: 0 0 2px 2px var(--borderColor); }
     }
 </style>

@@ -9,15 +9,18 @@ import type { CartsData } from "svelteCMS/types";
 export const POST:RequestHandler = async (event)=> {
     const apiLoad:ApiCartUpdate['input'] = await event.request.json()
     const cookieCartID = event.cookies.get("cart")
-    const product = await database.Find.product({ _id:new ObjectId(apiLoad.productID)})
+    const product = await database.Find.product({ _id:new ObjectId(apiLoad.productID)})    
     // if product was not founded
     if(!product){
         // return error
         const badResponse:ApiCartUpdate['output'] = { error:true,message:"Product was not founded" }
         return json(badResponse)
     }
+
+    const filter = { _id:new ObjectId(cookieCartID) }
+    const cart = await database.Find.cart(filter)
     // else if cookieCartID was not founded on cookies, create new one
-    if(!cookieCartID){
+    if(!cookieCartID || !cart){
         const newCart:Omit<CartsData,"_id"> = {
             totalItems:1,
             createdAt: new Date,
@@ -35,11 +38,9 @@ export const POST:RequestHandler = async (event)=> {
         return json(response)
     }
     // update cart
-    const filter = { _id:new ObjectId(cookieCartID) }
-    const cart = await database.Find.cart(filter)
     const cartID = cart._id
     // set new items
-    const itemInCart = cart.items.find(data=>data.variant===apiLoad.variant)
+    const itemInCart = cart.items.find(data=>data.variant===apiLoad.variant&&data.productID===apiLoad.productID)    
     // if item exists in cart, update quantity
     if(itemInCart){
         cart['items'] = cart.items.map(data=>{
@@ -51,7 +52,7 @@ export const POST:RequestHandler = async (event)=> {
     else cart['items'].push(apiLoad)
     // update updatedAt,totalItems and totalPrice
     cart['updatedAt'] = new Date
-    cart['totalItems'] = cart.items.reduce(prevNum=>prevNum+1,0)
+    cart['totalItems'] = cart.items.reduce((prevNum,item)=>prevNum+1,0)
     cart['totalPrice'] = cart.items.reduce((prevPrice,item)=>prevPrice+(item.price*item.quantity),0)
     // remove _id from cart object and update
     delete cart['_id']

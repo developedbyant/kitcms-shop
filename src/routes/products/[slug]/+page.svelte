@@ -1,6 +1,6 @@
 <script lang="ts">
     export let data:PageData
-    import { viewingProductStore,appStore } from "client/lib/stores";
+    import { viewingProductStore,appStore,cartStore } from "client/lib/stores";
     import Breadcrumb from "./Breadcrumb.svelte";
     import emblaCarouselSvelte from "embla-carousel-svelte";
     import ReviewsLink from "client/components/shared/ReviewsLink.svelte";
@@ -35,7 +35,10 @@
         // show message
         createToast({ type:apiResponse.error?"error":"successful",msg:apiResponse.message })
         // if cart was updated, open cart
-        if(!apiResponse.error) appStore.update(data=>{ data.cartIsOpen=true ; return data})
+        if(!apiResponse.error){
+            appStore.update(data=>{ data.cartIsOpen=true ; return data})
+            cartStore.set(apiResponse.data)
+        }
         await utils.wait(1000)
         addingToCart = false
     }
@@ -216,7 +219,7 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        margin-top: auto;
+        margin-top: 0;
     }
 
     // on mobile

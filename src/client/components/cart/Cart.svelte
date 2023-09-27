@@ -1,12 +1,18 @@
 <script lang="ts">
-    import { page } from "$app/stores"
-    import { appStore } from "client/lib/stores";
+    import { appStore,cartStore } from "client/lib/stores";
     import Coupon from "./Coupon.svelte";
     import XIcon from "client/icons/X.svelte";
     import Item from "./Item.svelte";
-    $: cartData = $page.data.cartData
+    import type { CartsData } from "svelteCMS/types"
+    import type { ApiCartItemUpdate } from "client/types";
+    import utils from "client/lib/utils";
+    import { createToast } from "svelteCMS/components/toasts/store";
+    $: cartData = $cartStore
     $: open = $appStore.cartIsOpen
     let closedAnimation = false
+    let updatingItem:CartsData['items'][0] = {} as any
+
+    /** open cart */
     const closeCart = (e:MouseEvent)=>{
         const target = e.target as HTMLDivElement|HTMLButtonElement
         const runFunc = target.classList.contains("closeBtn") || target.classList.contains("cart") || target.classList.contains("btn")
@@ -20,11 +26,27 @@
         },500)
     }
 
-    function rmItem(e:any){
-        // @ts-ignore
-        const item = e.detail as typeof cartData.items[0]
+    /** Remove item from cart */
+    function itemRemove(e:any){
+        const item:CartsData['items'][0] = e.detail
         const newItems = cartData!.items.filter(data=>data.variant!==item.variant)
         cartData!.items = [...newItems]
+    }
+
+    /** update item in cart */
+    async function itemUpdate(e:any) {
+        const item:CartsData['items'][0] = e.detail
+        // set item being updated
+        updatingItem = item
+        // make request
+        const apiLoad:ApiCartItemUpdate['input'] = item
+        const apiResponse:ApiCartItemUpdate['output'] = await utils.apiRequest("/api/cart/item-update",apiLoad)
+        // show error
+        if(apiResponse.error) createToast({ type:"error",msg:apiResponse.message })
+        // else set new cart data
+        else cartStore.set(apiResponse.data)
+        await utils.wait(500)
+        updatingItem = {} as any
     }
 </script>
 
@@ -41,8 +63,8 @@
             </div>
             <div class="items">
                 {#if cartData}
-                    {#each cartData.items as item (item.variant) }
-                        <Item {item} on:remove={rmItem}/>
+                    {#each cartData.items as item (item.productID+item.variant) }
+                        <Item {updatingItem} {item} on:remove={itemRemove} on:update={itemUpdate}/>
                     {/each}
                 {/if}
             </div>

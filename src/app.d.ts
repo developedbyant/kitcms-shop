@@ -4,7 +4,6 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			cartData:import("svelteCMS/types/generated").CartsData|null
 			svelteCMS:import("svelteCMS/types/locals").Locals
 		}
 		interface PageData {

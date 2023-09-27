@@ -1,7 +1,9 @@
 <script lang="ts">
     import"client/global.css"
+    export let cartData:PageData['cartData']
+    cartStore.set(cartData)
     import { page } from "$app/stores";
-    import { metaTagsStore } from "client/lib/stores";
+    import { metaTagsStore,cartStore } from "client/lib/stores";
     import { preparePageTransition } from "client/lib/pageTransition"
     import Toasts from "svelteCMS/components/toasts/Toasts.svelte";
     import Nav from "client/components/core/nav/Nav.svelte";
@@ -10,6 +12,7 @@
     // images
     import backdropImageSrc from "client/images/backdrop.png"
     import faviconImageSrc from "client/images/favicon.png"
+    import type { PageData } from "./$types";
     $: url = $page.url.href
     $: appName = $metaTagsStore.appName
     $: favicon = $metaTagsStore.favicon ? $metaTagsStore.favicon : faviconImageSrc

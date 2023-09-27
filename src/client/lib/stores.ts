@@ -1,6 +1,9 @@
 import { writable } from "svelte/store";
 import type { Writable } from "svelte/store";
 import type { DynamicTypes } from "client/types";
+import type { CartsData } from "svelteCMS/types";
+
+export const cartStore:Writable<CartsData|null> = writable()
 
 /** currently viewing product */
 export const viewingProductStore:Writable<DynamicTypes['viewProductData']> = writable()
